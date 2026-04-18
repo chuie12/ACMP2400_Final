@@ -1,0 +1,22 @@
+name: Docker Build Test
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-app .
+
+      - name: Run container
+        run: docker run -d -p 8000:8000 my-app
+
+      - name: Test app
+        run: curl http://localhost:8000
