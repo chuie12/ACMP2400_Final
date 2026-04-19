@@ -35,13 +35,24 @@ runs:
         for i in {1..15}; do
           if curl --fail "http://127.0.0.1:${{ inputs.port }}"; then
             echo "App is up"
-            exit 0
+            break
           fi
           sleep 2
         done
         echo "App never responded"
         docker logs my-app-test
         exit 1
+
+    - name: Check health endpoint
+      shell: bash
+      run: |
+        if curl --fail --silent "http://127.0.0.1:${{ inputs.port }}/health"; then
+          echo "Health endpoint OK"
+        else
+          echo "Health endpoint failed"
+          docker logs my-app-test
+          exit 1
+        fi
 
     - name: Cleanup
       if: always()
