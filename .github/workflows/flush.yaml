@@ -3,6 +3,10 @@ name: Break Terraform State Lease
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   break-lease:
     runs-on: ubuntu-latest
