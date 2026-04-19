@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
 
-RUN useradd -m appuser && chown -R appuser:appuser /app
+RUN adduser -D appuser && chown -R appuser:appuser /app
 
 COPY --chown=appuser:appuser . .
 
