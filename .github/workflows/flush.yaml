@@ -1,0 +1,24 @@
+name: Break Terraform State Lease
+
+on:
+  workflow_dispatch:
+
+jobs:
+  break-lease:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Break state blob lease
+        run: |
+          az storage blob lease break \
+            --account-name acmp2400storageaccount \
+            --container-name big-tf-state-acmp2400 \
+            --blob-name "curtis-huie/acmp2400-final.tfstate" \
+            --auth-mode login
