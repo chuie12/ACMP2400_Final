@@ -2,8 +2,16 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "4.68.0"
     }
+  }
+
+  backend "azurerm" {
+    resource_group_name = "rg-acmp-final"
+    storage_account_name = "acmp2400storageaccount"
+    container_name = "big-tf-state-acmp2400"
+    key = "curtis-huie/acmp2400-final.tfstate"
+    use_azuread_auth = true
   }
 }
 
@@ -11,7 +19,10 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "example" {
-  name     = "rg-devops-demo"
-  location = "East US"
+resource "azurerm_container_registry" "teacher_acr" {
+  name     = "acrteacheracmp2400"
+  resource_group_name = "rg-teacher"
+  location = "Central US"
+  sku = "Basic"
+  admin_enabled = false
 }
