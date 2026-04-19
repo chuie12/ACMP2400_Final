@@ -48,21 +48,6 @@ jobs:
           name: sbom
           path: sbom.spdx.json
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Tag image for ACR
-        run: |
-          docker tag my-app acrteacheracmp2400.azurecr.io/my-app:${{ github.sha }}
-
-      - name: Log in to ACR
-        run: az acr login --name acrteacheracmp2400
-
-      - name: Push image to ACR
-        run: docker push acrteacheracmp2400.azurecr.io/my-app:${{ github.sha }}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -96,3 +81,22 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform apply -auto-approve
+        
+      - name: Azure Login
+        if: github.ref == 'refs/heads/main'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Tag image for ACR
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker tag my-app acrteacheracmp2400.azurecr.io/my-app:${{ github.sha }}
+
+      - name: Log in to ACR
+        if: github.ref == 'refs/heads/main'
+        run: az acr login --name acrteacheracmp2400
+
+      - name: Push image to ACR
+        if: github.ref == 'refs/heads/main'
+        run: docker push acrteacheracmp2400.azurecr.io/my-app:${{ github.sha }}
