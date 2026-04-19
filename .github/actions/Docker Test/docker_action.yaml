@@ -1,0 +1,49 @@
+name: Docker smoke test
+description: Build image, run container, and verify app responds
+
+inputs:
+  image-name:
+    description: Docker image tag
+    required: true
+  port:
+    description: Port to publish
+    required: false
+    default: "8000"
+  secret-key:
+    description: Django secret key
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build image
+      shell: bash
+      run: docker build -t "${{ inputs.image-name }}" .
+
+    - name: Run container
+      shell: bash
+      run: |
+        docker run -d \
+          --name my-app-test \
+          -p ${{ inputs.port }}:${{ inputs.port }} \
+          -e DJANGO_SECRET_KEY="${{ inputs.secret-key }}" \
+          "${{ inputs.image-name }}"
+
+    - name: Wait for app
+      shell: bash
+      run: |
+        for i in {1..15}; do
+          if curl --fail "http://127.0.0.1:${{ inputs.port }}"; then
+            echo "App is up"
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "App never responded"
+        docker logs my-app-test
+        exit 1
+
+    - name: Cleanup
+      if: always()
+      shell: bash
+      run: docker rm -f my-app-test || true
