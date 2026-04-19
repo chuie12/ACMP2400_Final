@@ -47,7 +47,7 @@ resource "azurerm_container_group" "app" {
 
   container {
     name = "my-app"
-    image = "acrteacheracmp2400.azurecr.io/my-app:${{var.image_tag}}"
+    image = "acrteacheracmp2400.azurecr.io/my-app:${var.image_tag}"
     cpu = 0.5
     memory = 1.5
 
