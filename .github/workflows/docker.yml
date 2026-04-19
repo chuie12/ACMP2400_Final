@@ -19,3 +19,23 @@ jobs:
           image-name: my-app
           port: "8000"
           secret-key: ${{ secrets.DJANGO_SECRET_KEY }}
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: my-app:latest
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Scan SBOM
+        uses: anchore/scan-action@v6
+        with:
+          sbom: sbom.spdx.json
+          fail-build: true
+          severity-cutoff: high
+
+      - name: Uplaod SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
