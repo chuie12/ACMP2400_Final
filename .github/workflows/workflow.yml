@@ -80,7 +80,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="image_tag=${{ github.sha }}" -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}
         
       - name: Azure Login
         if: github.ref == 'refs/heads/main'
