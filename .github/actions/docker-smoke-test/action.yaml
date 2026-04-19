@@ -46,7 +46,7 @@ runs:
     - name: Check health endpoint
       shell: bash
       run: |
-        if curl --fail --silent "http://127.0.0.1:${{ inputs.port }}/health"; then
+        if curl --fail --silent "http://127.0.0.1:${{ inputs.port }}/"; then
           echo "Health endpoint OK"
         else
           echo "Health endpoint failed"
