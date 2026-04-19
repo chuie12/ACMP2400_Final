@@ -21,7 +21,7 @@ provider "azurerm" {
 
 resource "azurerm_container_registry" "teacher_acr" {
   name = "acrteacheracmp2400"
-  resource_group_name = "rg-teacher"
+  resource_group_name = "rg-student"
   location = "Central US"
   sku = "Basic"
   admin_enabled = false
