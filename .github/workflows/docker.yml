@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Run custom action
-        uses: ./.github/actions/docker-smoke-test
+        uses: ./.github/actions/docker_action
         with:
           image-name: my-app
           port: "8000"
