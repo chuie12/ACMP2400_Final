@@ -26,7 +26,7 @@ default = "latest"
 
 variable "django_secret_key" {
 type = string
-sesitive = true
+sensitive = true
 }
 
 resource "azurerm_container_registry" "teacher_acr" {
