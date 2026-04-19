@@ -39,17 +39,20 @@ runs:
           fi
           sleep 2
         done
-        echo "App never responded"
-        docker logs my-app-test
-        exit 1
+        
+        if ! curl --fail --silent "http://127.0.0.1:${{ inputs.port }}/"; then
+          echo "App never responded"
+          docker logs my-app-test
+          exit 1
+        fi
 
-    - name: Check health endpoint
+    - name: Check root endpoint
       shell: bash
       run: |
         if curl --fail --silent "http://127.0.0.1:${{ inputs.port }}/"; then
-          echo "Health endpoint OK"
+          echo "Root endpoint OK"
         else
-          echo "Health endpoint failed"
+          echo "Root endpoint failed"
           docker logs my-app-test
           exit 1
         fi
