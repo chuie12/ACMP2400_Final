@@ -81,3 +81,8 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform apply -auto-approve
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
