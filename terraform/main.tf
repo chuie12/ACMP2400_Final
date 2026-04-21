@@ -69,5 +69,5 @@ resource "azurerm_container_group" "teacher-aci" {
 }
 
 output "container_fqdn" {
-  value = azurerm_container_group.app.fqdn
+  value = azurerm_container_group.teacher-aci.fqdn
 }
