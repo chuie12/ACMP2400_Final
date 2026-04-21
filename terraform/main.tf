@@ -29,15 +29,15 @@ type = string
 sensitive = true
 }
 
-resource "azurerm_container_registry" "teacher_acr" {
-  name = "acrteacheracmp2400"
+resource "azurerm_container_registry" "chuie_acr" {
+  name = "acrchuieacmp2400"
   resource_group_name = "rg-chuie"
   location = "Central US"
   sku = "Basic"
-  admin_enabled = true
+  admin_enabled = false
 }
 
-resource "azurerm_container_group" "teacher-aci" {
+resource "azurerm_container_group" "chuie-aci" {
   name = "cg-my-app"
   location = "Central US"
   resource_group_name = "rg-chuie"
