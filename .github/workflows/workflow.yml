@@ -48,6 +48,24 @@ jobs:
           name: sbom
           path: sbom.spdx.json
 
+      - name: Azure Login
+        if: github.ref == 'refs/heads/main'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        if: github.ref == 'refs/heads/main'
+        run: az acr login --name acrchuieacmp2400
+
+      - name: Tag image for ACR
+        if: github.ref == 'refs/heads/main'
+        run: docker tag my-app acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
+
+      - name: Push image to ACR
+        if: github.ref == 'refs/heads/main'
+        run: docker push acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -61,15 +79,6 @@ jobs:
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform init
 
-      - name: Terraform Apply ACR only (one-time fix)
-        working-directory: ./terraform
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        run: terraform apply -auto-approve -input=false -target=azurerm_container_registry.teacher_acr -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
-
       - name: Terraform Plan
         working-directory: ./terraform
         env:
@@ -79,7 +88,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform plan -no-color -input=false -lock-timeout=60s -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" -var="image_tag=${{ github.sha }}"
-      
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         working-directory: ./terraform
@@ -90,22 +99,3 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform apply -auto-approve -input=false -var="image_tag=${{ github.sha }}" -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
-        
-      - name: Azure Login
-        if: github.ref == 'refs/heads/main'
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Tag image for ACR
-        if: github.ref == 'refs/heads/main'
-        run: |
-          docker tag my-app acrteacheracmp2400.azurecr.io/my-app:${{ github.sha }}
-
-      - name: Log in to ACR
-        if: github.ref == 'refs/heads/main'
-        run: az acr login --name acrteacheracmp2400
-
-      - name: Push image to ACR
-        if: github.ref == 'refs/heads/main'
-        run: docker push acrteacheracmp2400.azurecr.io/my-app:${{ github.sha }}
