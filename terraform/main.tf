@@ -34,7 +34,7 @@ resource "azurerm_container_registry" "teacher_acr" {
   resource_group_name = "rg-chuie"
   location = "Central US"
   sku = "Basic"
-  admin_enabled = false
+  admin_enabled = true
 }
 
 resource "azurerm_container_group" "app" {
