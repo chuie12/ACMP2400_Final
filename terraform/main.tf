@@ -37,7 +37,7 @@ resource "azurerm_container_registry" "teacher_acr" {
   admin_enabled = true
 }
 
-resource "azurerm_container_group" "app" {
+resource "azurerm_container_group" "teacher-aci" {
   name = "cg-my-app"
   location = "Central US"
   resource_group_name = "rg-chuie"
