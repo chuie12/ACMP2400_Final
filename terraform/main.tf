@@ -34,10 +34,10 @@ resource "azurerm_container_registry" "chuie_acr" {
   resource_group_name = "rg-chuie"
   location = "Central US"
   sku = "Basic"
-  admin_enabled = false
+  admin_enabled = true
 }
 
-resource "azurerm_container_group" "chuie-aci" {
+resource "azurerm_container_group" "chuie_aci" {
   name = "cg-my-app"
   location = "Central US"
   resource_group_name = "rg-chuie"
@@ -47,7 +47,7 @@ resource "azurerm_container_group" "chuie-aci" {
 
   container {
     name = "my-app"
-    image = "acrteacheracmp2400.azurecr.io/my-app:${var.image_tag}"
+    image = "acrchuieacmp2400.azurecr.io/my-app:${var.image_tag}"
     cpu = 0.5
     memory = 1.5
 
@@ -62,12 +62,12 @@ resource "azurerm_container_group" "chuie-aci" {
   }
 
   image_registry_credential {
-    server = "acrteacheracmp2400.azurecr.io"
-    username = azurerm_container_registry.teacher_acr.admin_username
-    password = azurerm_container_registry.teacher_acr.admin_password
+    server = "acrchuieacmp2400.azurecr.io"
+    username = azurerm_container_registry.chuie_acr.admin_username
+    password = azurerm_container_registry.chuie_acr.admin_password
   }
 }
 
 output "container_fqdn" {
-  value = azurerm_container_group.teacher-aci.fqdn
+  value = azurerm_container_group.chuie_aci.fqdn
 }
