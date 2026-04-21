@@ -79,7 +79,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform plan
+        run: terraform plan -no-color -input=false -lock-timeout=60s -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" -var="image_tage=${{ github.sha }}"
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
@@ -90,7 +90,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform apply -auto-approve -var="image_tag=${{ github.sha }}" -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
+        run: terraform apply -auto-approve -input=false -var="image_tag=${{ github.sha }}" -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
         
       - name: Azure Login
         if: github.ref == 'refs/heads/main'
