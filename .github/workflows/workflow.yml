@@ -61,16 +61,6 @@ jobs:
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform init
 
-      - name: Force unlock state
-        working-directory: ./terraform
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform force-unlock -force 10d617e1-c6fd-6ebc-2d87-46ba266bc4ce
-
       - name: Terraform Plan
         working-directory: ./terraform
         env:
