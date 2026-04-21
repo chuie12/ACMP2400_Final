@@ -68,7 +68,7 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        run: terraform apply -auto-approve -input=false -target=azurerm_container_registry.teacher_acr
+        run: terraform apply -auto-approve -input=false -target=azurerm_container_registry.teacher_acr -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
 
       - name: Terraform Plan
         working-directory: ./terraform
