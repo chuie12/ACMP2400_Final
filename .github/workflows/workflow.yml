@@ -48,6 +48,19 @@ jobs:
           name: sbom
           path: sbom.spdx.json
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+        run: terraform init
+
       - name: Azure Login
         if: github.ref == 'refs/heads/main'
         uses: azure/login@v2
@@ -65,19 +78,6 @@ jobs:
       - name: Push image to ACR
         if: github.ref == 'refs/heads/main'
         run: docker push acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        working-directory: ./terraform
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform init
 
       - name: Terraform Plan
         working-directory: ./terraform
