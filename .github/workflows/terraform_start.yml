@@ -6,7 +6,8 @@ on:
 jobs:
   build-test-scan-deploy:
     runs-on: ubuntu-latest
-  
+
+    steps:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -29,3 +30,14 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform plan -no-color -input=false -lock-timeout=60s -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" -var="image_tag=${{ github.sha }}"
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: ./terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+        run: terraform apply -auto-approve -input=false -var="image_tag=${{ github.sha }}" -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
