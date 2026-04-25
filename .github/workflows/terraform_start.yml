@@ -12,7 +12,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        working-directory: ./terraform
+        working-directory: ./terraform_init
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -22,7 +22,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./terraform
+        working-directory: ./terraform_init
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -33,7 +33,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        working-directory: ./terraform
+        working-directory: ./terraform_init
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
