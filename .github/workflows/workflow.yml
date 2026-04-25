@@ -46,6 +46,24 @@ jobs:
           name: sbom
           path: sbom.spdx.json
 
+      - name: Azure Login
+        if: github.ref == 'refs/heads/main'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        if: github.ref == 'refs/heads/main'
+        run: az acr login --name acrchuieacmp2400
+
+      - name: Tag image for ACR
+        if: github.ref == 'refs/heads/main'
+        run: docker tag my-app acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
+
+      - name: Push image to ACR
+        if: github.ref == 'refs/heads/main'
+        run: docker push acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -68,24 +86,6 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform plan -no-color -input=false -lock-timeout=60s -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" -var="image_tag=${{ github.sha }}"
-
-      - name: Azure Login
-        if: github.ref == 'refs/heads/main'
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Log in to ACR
-        if: github.ref == 'refs/heads/main'
-        run: az acr login --name acrchuieacmp2400
-
-      - name: Tag image for ACR
-        if: github.ref == 'refs/heads/main'
-        run: docker tag my-app acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
-
-      - name: Push image to ACR
-        if: github.ref == 'refs/heads/main'
-        run: docker push acrchuieacmp2400.azurecr.io/my-app:${{ github.sha }}
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
