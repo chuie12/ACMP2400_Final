@@ -19,15 +19,15 @@ provider "azurerm" {
   features {}
 }
 
-variable "image_tag" {
-type = string
-default = "latest"
-}
+# variable "image_tag" {
+# type = string
+# default = "latest"
+# }
 
-variable "django_secret_key" {
-type = string
-sensitive = true
-}
+# variable "django_secret_key" {
+# type = string
+# sensitive = true
+# }
 
 resource "azurerm_user_assigned_identity" "chuie_aci_identity" {
   name = "id-chuie-aci-acrpull"
