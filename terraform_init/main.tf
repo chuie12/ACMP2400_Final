@@ -19,15 +19,15 @@ provider "azurerm" {
   features {}
 }
 
-# variable "image_tag" {
-# type = string
-# default = "latest"
-#  }
+variable "image_tag" {
+type = string
+default = "latest"
+}
 
-# variable "django_secret_key" {
-# type = string
-# sensitive = true
-# }
+variable "django_secret_key" {
+type = string
+sensitive = true
+}
 
 resource "azurerm_container_registry" "chuie_acr" {
   name = "acrchuieacmp2400"
