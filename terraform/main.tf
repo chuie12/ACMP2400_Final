@@ -70,8 +70,8 @@ resource "azurerm_container_group" "chuie_aci" {
 
   image_registry_credential {
     server = data.azurerm_container_registry.chuie_acr.login_server
-    username = var.ARM_CLIENT_ID
-    password = var.ARM_CLIENT_SECRET
+    username = data.azurerm_container_registry.chuie_acr.admin_username
+    password = data.azurerm_container_registry.chuie_acr.admin_password
   }
 }
 
