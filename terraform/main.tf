@@ -19,12 +19,12 @@ provider "azurerm" {
   features {}
 }
 
-variable "acr_username" {
+variable "ARM_CLIENT_ID" {
   type = string
   sensitive = true
 }
 
-variable "acr_password" {
+variable "ARM_CLIENT_SECRET" {
   type = string
   sensitive = true
 }
