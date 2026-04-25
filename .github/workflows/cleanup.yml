@@ -32,7 +32,14 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform destroy -auto-approve -input=false -lock=false
+        run: |
+          terraform destroy -auto-approve \
+          -input=false \
+          -lock=false \
+          -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" \
+          -var="image_tag=${{ github.sha }}" \
+          -var="ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}"  \
+          -var="ARM_CLIENT_SECRET=${{ secrets.ARM_CLIENT_SECRET }}"
 
       - name: Terraform Init Registry
         working-directory: ./terraform_init
@@ -52,4 +59,11 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
-        run: terraform destroy -auto-approve -input=false -lock=false
+        run: |
+          terraform destroy -auto-approve \
+            -input=false \
+            -lock=false \
+            -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" \
+            -var="image_tag=${{ github.sha }}" \
+            -var="ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}"  \
+            -var="ARM_CLIENT_SECRET=${{ secrets.ARM_CLIENT_SECRET }}"
