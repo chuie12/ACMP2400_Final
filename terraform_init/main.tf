@@ -34,5 +34,5 @@ resource "azurerm_container_registry" "chuie_acr" {
   resource_group_name = "rg-chuie"
   location = "Central US"
   sku = "Basic"
-  admin_enabled = false
+  admin_enabled = true
 }
