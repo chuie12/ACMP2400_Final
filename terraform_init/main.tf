@@ -19,16 +19,6 @@ provider "azurerm" {
   features {}
 }
 
-variable "image_tag" {
-type = string
-default = "latest"
-}
-
-variable "django_secret_key" {
-type = string
-sensitive = true
-}
-
 resource "azurerm_container_registry" "chuie_acr" {
   name = "acrchuieacmp2400"
   resource_group_name = "rg-chuie"
