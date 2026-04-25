@@ -75,7 +75,6 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform init
 
       - name: Terraform Plan
@@ -85,7 +84,6 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: |
           terraform plan -no-color \
           -input=false \
@@ -101,7 +99,6 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: |
           terraform apply -auto-approve -input=false \
                 -var="image_tag=${{ github.sha }}" \
