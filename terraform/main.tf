@@ -35,50 +35,50 @@ resource "azurerm_user_assigned_identity" "chuie_aci_identity" {
   location = "Central US"
 }
 
-resource "azurerm_role_assignment" "chuie_acr_pull" {
-  scope = data.azurerm_container_registry.chuie_acr.id
-  role_definition_name = "AcrPull"
-  principal_id = azurerm_user_assigned_identity.chuie_aci_identity.principal_id
-}
+# resource "azurerm_role_assignment" "chuie_acr_pull" {
+#   scope = data.azurerm_container_registry.chuie_acr.id
+#   role_definition_name = "AcrPull"
+#   principal_id = azurerm_user_assigned_identity.chuie_aci_identity.principal_id
+# }
 
-data "azurerm_container_registry" "chuie_acr" {
-  name = "acrchuieacmp2400"
-  resource_group_name = "rg-chuie"
-}
+# data "azurerm_container_registry" "chuie_acr" {
+#   name = "acrchuieacmp2400"
+#   resource_group_name = "rg-chuie"
+# }
 
-resource "azurerm_container_group" "chuie_aci" {
-  name = "cg-my-app"
-  location = "Central US"
-  resource_group_name = "rg-chuie"
-  os_type = "Linux"
-  ip_address_type = "Public"
-  dns_name_label = "chuie-myapp-demo"
+# resource "azurerm_container_group" "chuie_aci" {
+#   name = "cg-my-app"
+#   location = "Central US"
+#   resource_group_name = "rg-chuie"
+#   os_type = "Linux"
+#   ip_address_type = "Public"
+#   dns_name_label = "chuie-myapp-demo"
 
-  container {
-    name = "my-app"
-    image = "${data.azurerm_container_registry.chuie_acr.login_server}/my-app:${var.image_tag}"
-    cpu = 0.5
-    memory = 1.5
+#   container {
+#     name = "my-app"
+#     image = "${data.azurerm_container_registry.chuie_acr.login_server}/my-app:${var.image_tag}"
+#     cpu = 0.5
+#     memory = 1.5
 
-    ports {
-      port = 8000
-      protocol = "TCP"
-    }
+#     ports {
+#       port = 8000
+#       protocol = "TCP"
+#     }
 
-    environment_variables = {
-      DJANGO_SECRET_KEY = var.django_secret_key
-    }
-  }
+#     environment_variables = {
+#       DJANGO_SECRET_KEY = var.django_secret_key
+#     }
+#   }
 
-  image_registry_credential {
-    server = data.azurerm_container_registry.chuie_acr.login_server
-    user_assigned_identity_id = azurerm_user_assigned_identity.chuie_aci_identity.id
-  }
-  depends_on = [
-    azurerm_role_assignment.chuie_acr_pull
-  ]
-}
+#   image_registry_credential {
+#     server = data.azurerm_container_registry.chuie_acr.login_server
+#     user_assigned_identity_id = azurerm_user_assigned_identity.chuie_aci_identity.id
+#   }
+#   depends_on = [
+#     azurerm_role_assignment.chuie_acr_pull
+#   ]
+# }
 
-output "container_fqdn" {
-  value = azurerm_container_group.chuie_aci.fqdn
-}
+# output "container_fqdn" {
+#   value = azurerm_container_group.chuie_aci.fqdn
+# }
