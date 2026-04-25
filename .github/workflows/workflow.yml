@@ -77,6 +77,19 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         run: terraform init
 
+      - name: Import existing ACI if needed
+        working-directory: ./terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        run: |
+          terraform import \
+            -input=false \
+            azurerm_container_group.chuie_aci \
+            "/subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/rg-chuie/providers/Microsoft.ContainerInstance/containerGroups/cg-my-app" || true
+
       - name: Terraform Plan
         working-directory: ./terraform
         env:
