@@ -19,66 +19,62 @@ provider "azurerm" {
   features {}
 }
 
-# variable "image_tag" {
-# type = string
-# default = "latest"
-# }
-
-# variable "django_secret_key" {
-# type = string
-# sensitive = true
-# }
-
-resource "azurerm_user_assigned_identity" "chuie_aci_identity" {
-  name = "id-chuie-aci-acrpull"
-  resource_group_name = "rg-chuie"
-  location = "Central US"
+variable "acr_username" {
+  type = string
+  sensitive = true
 }
 
-# resource "azurerm_role_assignment" "chuie_acr_pull" {
-#   scope = data.azurerm_container_registry.chuie_acr.id
-#   role_definition_name = "AcrPull"
-#   principal_id = azurerm_user_assigned_identity.chuie_aci_identity.principal_id
-# }
+variable "acr_password" {
+  type = string
+  sensitive = true
+}
 
-# data "azurerm_container_registry" "chuie_acr" {
-#   name = "acrchuieacmp2400"
-#   resource_group_name = "rg-chuie"
-# }
+variable "image_tag" {
+type = string
+default = "latest"
+}
 
-# resource "azurerm_container_group" "chuie_aci" {
-#   name = "cg-my-app"
-#   location = "Central US"
-#   resource_group_name = "rg-chuie"
-#   os_type = "Linux"
-#   ip_address_type = "Public"
-#   dns_name_label = "chuie-myapp-demo"
+variable "django_secret_key" {
+type = string
+sensitive = true
+}
 
-#   container {
-#     name = "my-app"
-#     image = "${data.azurerm_container_registry.chuie_acr.login_server}/my-app:${var.image_tag}"
-#     cpu = 0.5
-#     memory = 1.5
+data "azurerm_container_registry" "chuie_acr" {
+  name = "acrchuieacmp2400"
+  resource_group_name = "rg-chuie"
+}
 
-#     ports {
-#       port = 8000
-#       protocol = "TCP"
-#     }
+resource "azurerm_container_group" "chuie_aci" {
+  name = "cg-my-app"
+  location = "Central US"
+  resource_group_name = "rg-chuie"
+  os_type = "Linux"
+  ip_address_type = "Public"
+  dns_name_label = "chuie-myapp-demo"
 
-#     environment_variables = {
-#       DJANGO_SECRET_KEY = var.django_secret_key
-#     }
-#   }
+  container {
+    name = "my-app"
+    image = "acrchuieacmp2400.azurecr.io/my-app:${var.image_tag}"
+    cpu = 0.5
+    memory = 1.5
 
-#   image_registry_credential {
-#     server = data.azurerm_container_registry.chuie_acr.login_server
-#     user_assigned_identity_id = azurerm_user_assigned_identity.chuie_aci_identity.id
-#   }
-#   depends_on = [
-#     azurerm_role_assignment.chuie_acr_pull
-#   ]
-# }
+    ports {
+      port = 8000
+      protocol = "TCP"
+    }
 
-# output "container_fqdn" {
-#   value = azurerm_container_group.chuie_aci.fqdn
-# }
+    environment_variables = {
+      DJANGO_SECRET_KEY = var.django_secret_key
+    }
+  }
+
+  image_registry_credential {
+    server = data.azurerm_container_registry.chuie_acr.login_server
+    username = var.ARM_CLIENT_ID
+    password = var.ARM_CLIENT_SECRET
+  }
+}
+
+output "container_fqdn" {
+  value = azurerm_container_group.chuie_aci.fqdn
+}
