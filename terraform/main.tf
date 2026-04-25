@@ -29,12 +29,24 @@ type = string
 sensitive = true
 }
 
+resource "azurerm_user_assigned_identity" "chuie_aci_identity" {
+  name = "id-chuie-aci-acrpull"
+  resource_group_name = "rg-chuie"
+  location = "Central US"
+}
+
+resource "azurerm_role_assignment" "chuie_acr_pull" {
+  scope = azurerm_container_registry.chuie_acr.id
+  role_definition_name = "AcrPull"
+  principal_id = azurerm_user_assigned_identity.chuie_aci_identity.principal_id
+}
+
 resource "azurerm_container_registry" "chuie_acr" {
   name = "acrchuieacmp2400"
   resource_group_name = "rg-chuie"
   location = "Central US"
   sku = "Basic"
-  admin_enabled = true
+  admin_enabled = false
 }
 
 resource "azurerm_container_group" "chuie_aci" {
@@ -47,7 +59,7 @@ resource "azurerm_container_group" "chuie_aci" {
 
   container {
     name = "my-app"
-    image = "acrchuieacmp2400.azurecr.io/my-app:${var.image_tag}"
+    image = "${azurerm_container_registry.chuie_acr.login_server}/my-app:${var.image_tag}"
     cpu = 0.5
     memory = 1.5
 
@@ -62,10 +74,12 @@ resource "azurerm_container_group" "chuie_aci" {
   }
 
   image_registry_credential {
-    server = "acrchuieacmp2400.azurecr.io"
-    username = azurerm_container_registry.chuie_acr.admin_username
-    password = azurerm_container_registry.chuie_acr.admin_password
+    server = azurerm_container_registry.chuie_acr.login_server
+    user_assigned_identity_id = azurerm_user_assigned_identity.chuie_aci_identity.id
   }
+  depends_on = [
+    azurerm_role_assignment.chuie_acr_pull
+  ]
 }
 
 output "container_fqdn" {
