@@ -91,7 +91,7 @@ jobs:
           -input=false \
           -lock-timeout=60s \
           -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" \
-          -var="image_tag=${{ github.sha }}" \
+          -var="image_tag=${{ github.sha }}"
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
@@ -105,4 +105,4 @@ jobs:
         run: |
           terraform apply -auto-approve -input=false \
                 -var="image_tag=${{ github.sha }}" \
-                -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}" \
+                -var="django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
