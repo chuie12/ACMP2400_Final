@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-test-scan-deploy:
+  terraform_start:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+    
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
