@@ -1,6 +1,11 @@
 name: build-test-scan-deploy
 
 on:
+  workflow_run:
+    workflows: ["terraform_start"]
+    types:
+      - completed
+
   workflow_dispatch:
 
 jobs:
