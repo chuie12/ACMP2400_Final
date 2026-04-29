@@ -57,3 +57,15 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           STATE_KEY: ${{ secrets.ARM_ACCESS_KEY }}
         run: terraform destroy -auto-approve -input=false
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Delete ACR Images
+        run: |
+          az acr repository delete \
+            --name acrchuieacmp2400 \
+            --repository my-app \
+            --yes
