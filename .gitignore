@@ -8,11 +8,11 @@ venv/
 .env/
 .env.*
 
-# Django stuff
+# Django
 db.sqlite3
 *.log
 
-# Git
+# Gitignore
 .git/
 .gitignore
 
