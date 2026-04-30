@@ -3,10 +3,10 @@ FROM python:alpine@sha256:dd4d2bd5b53d9b25a51da13addf2be586beebd5387e289e798e408
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
 
-RUN adduser -D appuser && chown -R appuser:appuser /app
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt &&\
+    adduser -D appuser
 
 COPY --chown=appuser:appuser . .
 
