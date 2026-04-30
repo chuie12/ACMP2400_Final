@@ -16,14 +16,6 @@ db.sqlite3
 .git/
 .gitignore
 
-# OS junk
-.DS_Store
-Thumbs.db
-
-# Node (if you ever add frontend tooling)
-node_modules/
-
 # IDEs
 .vscode/
 .idea/
-
