@@ -5,8 +5,9 @@ WORKDIR /app
 COPY requirements.txt .
 
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt &&\
-    adduser -D appuser
+    pip install --no-cache-dir --root-user-action=ignore -r requirements.txt && \
+    adduser -D appuser && \
+    chown -R appuser:appuser /app
 
 COPY --chown=appuser:appuser . .
 
