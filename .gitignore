@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.env/
+.env.*
+
+# Django stuff
+db.sqlite3
+*.log
+
+# Git
+.git/
+.gitignore
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Node (if you ever add frontend tooling)
+node_modules/
+
+# IDEs
+.vscode/
+.idea/
+
+# Terraform
+terraform/
+terraform_init/
