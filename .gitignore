@@ -26,7 +26,3 @@ node_modules/
 # IDEs
 .vscode/
 .idea/
-
-# Terraform
-terraform/
-terraform_init/
