@@ -82,7 +82,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         run: terraform init
 
-      - name: Import existing ACI if needed
+      - name: Existing ACI Check
         working-directory: ./terraform
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
