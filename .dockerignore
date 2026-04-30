@@ -1,0 +1,17 @@
+terraform/
+terraform_init/
+
+__pycache__/
+*.pyc
+*.pyo
+
+venv/
+.env
+.env.*
+
+db.sqlite3
+*.log
+
+.git/
+.vscode/
+.idea/
